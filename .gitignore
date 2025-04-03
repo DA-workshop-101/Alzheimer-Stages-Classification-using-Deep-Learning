@@ -61,6 +61,7 @@ target/
 .venv/
 data/
 data-source/
+test.py
 
 # Database
 *.db
