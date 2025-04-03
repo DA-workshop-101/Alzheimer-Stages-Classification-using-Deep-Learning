@@ -3,6 +3,7 @@ base:
 
 raw_data:
   data_src: data_source
+  classes: ['AD', 'CN', 'EMCI', 'LMCI']
   
 load_data:
   num_classes: 4
