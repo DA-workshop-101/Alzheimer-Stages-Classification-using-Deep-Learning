@@ -1,4 +1,4 @@
-from disutils.command.config import config # type: ignore
+from distutils.command.config import config # type: ignore
 import os
 import requests
 import shutil
