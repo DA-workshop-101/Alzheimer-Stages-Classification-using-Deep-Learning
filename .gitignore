@@ -60,7 +60,7 @@ target/
 .env
 .venv/
 data/
-data-source/
+data_source/
 test.py
 
 # Database
