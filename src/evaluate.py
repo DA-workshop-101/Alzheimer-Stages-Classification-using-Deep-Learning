@@ -46,8 +46,7 @@ def m_evaluate(config_file):
 
 
 if __name__ == '__main__':
-
-    args_parser = argparse.ArgumentParser()
-    args_parser.add_argument('--config',default='params.yaml')
-    passed_args = args_parser.parse_args()
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--config', default='params.yaml')
+    passed_args=parser.parse_args()
     m_evaluate(config_file=passed_args.config)

@@ -15,7 +15,7 @@ train:
   split_ratio: 0.80
 
 model:
-  name: VGG19
+  name: VGG16
   trainable: False
   train_path: data/processed/train
   test_path: data/processed/test
@@ -32,8 +32,9 @@ img_augment:
   shear_range: 0.2
   zoom_range: 0.2
   horizontal_flip: True
-  vertical_flip: True
-  batch_size: 32
+  vertical_flip: False
+  brightness_range: [0.8, 1.2]
+  batch_size: 64
   class_mode: 'categorical'
 
 model_dir: models
