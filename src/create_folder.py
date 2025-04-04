@@ -6,13 +6,13 @@ import pandas as pd
 import numpy as np
 from get_data import read_params
 
-def create_folder(config, image=None):
-    config=read_params(config)
-    base_dir = config['load_data']['preprocessed_data']
+def create_folder(config_file: str, image=None) -> None:
+    config=read_params(config_file)
+    dest_dir = config['load_data']['preprocessed_data']
     classes = config['raw_data']['classes']
 
-    train_dir = os.path.join(base_dir, 'train')
-    test_dir = os.path.join(base_dir, 'test')
+    train_dir = os.path.join(dest_dir, 'train')
+    test_dir = os.path.join(dest_dir, 'test')
 
     if os.path.exists(train_dir) and os.path.exists(test_dir):
         print('Train and Test folders already exist....!')
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument('--config', default='params.yaml')
     passed_args=parser.parse_args()
-    create_folder(config=passed_args.config)
+    create_folder(config_file=passed_args.config)
