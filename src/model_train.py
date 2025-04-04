@@ -7,7 +7,7 @@ import os
 import argparse
 from get_data import read_params
 import matplotlib.pyplot as plt
-from keras.applications.vgg16 import VGG16
+from keras.applications.vgg19 import VGG19
 import tensorflow as tf
 
 def train_model(config_file):
@@ -38,7 +38,7 @@ def train_model(config_file):
 
     print(type(batch))
 
-    resnet = VGG16(input_shape=img_size + [3], weights = 'imagenet', include_top = False)
+    resnet = VGG19(input_shape=img_size + [3], weights = 'imagenet', include_top = False)
     for p in resnet.layers:
         p.trainable = False
 

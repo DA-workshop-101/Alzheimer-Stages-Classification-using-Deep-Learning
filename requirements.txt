@@ -3,14 +3,14 @@
 # external requirements
 
 pandas
-numpy
+numpy==1.26.4
 dvc
 keras
 scikit-learn
 matplotlib
 seaborn
-# tensorflow[and-cuda]
-tensorflow
+# tensorflow[and-cuda]==2.10.*
+tensorflow==2.10.*
 # tensorflow==2.16.1
 joblib
 PyYaml
