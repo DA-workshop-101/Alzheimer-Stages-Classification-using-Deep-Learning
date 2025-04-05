@@ -91,3 +91,9 @@ test.py
 
 # Mypy cache
 .mypy_cache/
+
+
+#fine tuning script, model file and its reports
+src/fine_tune_model.py
+models/trained_finetuned.h5
+reports/fine_tuned_performance.png

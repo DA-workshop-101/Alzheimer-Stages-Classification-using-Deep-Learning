@@ -1,5 +1,7 @@
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
+from tensorflow.keras.models import load_model # type: ignore
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout
 from keras.models import Model
 from glob import glob
@@ -10,18 +12,8 @@ import matplotlib.pyplot as plt
 from keras.applications.vgg19 import VGG19
 import tensorflow as tf
 
-def train_model(config_file):
-    config = read_params(config_file)
-    train = config['model']['trainable']
-
-    if train == False:
-        print("Model is not trainable")
-        return
-
-    img_size = config['model']['image_size']
-    train_set = config['model']['train_path']
-    test_set = config['model']['test_path']
-    num_cls = config['load_data']['num_classes']
+def create_data_generators(config):
+    img_size = tuple(config['model']['image_size'])
     rescale = config['img_augment']['rescale']
     shear_range = config['img_augment']['shear_range']
     zoom_range = config['img_augment']['zoom_range']
@@ -30,25 +22,10 @@ def train_model(config_file):
     brightness_range = config['img_augment']['brightness_range']
     class_mode = config['img_augment']['class_mode']
     batch = config['img_augment']['batch_size']
-    loss = config['model']['loss']
-    optimizer = config['model']['optimizer']
-    metrics = config['model']['metrics']
-    epochs = config['model']['epochs']
-    model_path = config['model']['sav_dir']
+    train_path = config['model']['train_path']
+    test_path = config['model']['test_path']
 
     print(type(batch))
-
-    resnet = VGG19(input_shape=img_size + [3], weights = 'imagenet', include_top = False)
-    for p in resnet.layers:
-        p.trainable = False
-
-    op = Flatten()(resnet.output)
-    prediction = Dense(num_cls, activation='softmax')(op)
-    mod = Model(inputs = resnet.input, outputs = prediction)
-    print(mod.summary())
-    img_size = tuple(img_size)
-        
-    mod.compile(loss = loss, optimizer = optimizer, metrics = metrics)
 
     train_gen = ImageDataGenerator(rescale = rescale, 
                                        shear_range = shear_range, 
@@ -59,16 +36,49 @@ def train_model(config_file):
                                        brightness_range = brightness_range)
     test_gen = ImageDataGenerator(rescale = rescale)
 
-    train_set = train_gen.flow_from_directory(train_set,
+    train_set = train_gen.flow_from_directory(train_path,
                                                   target_size = img_size,
                                                   batch_size = batch,
                                                   class_mode = class_mode)
-    test_set = test_gen.flow_from_directory(test_set, 
+    test_set = test_gen.flow_from_directory(test_path, 
                                                 target_size=img_size,
                                                 batch_size = batch,
                                                 class_mode = class_mode)
+    
+    return train_set, test_set
 
-    history = mod.fit(train_set,
+def train_model(config_file):
+    config = read_params(config_file)
+    train = config['model']['trainable']
+
+    if train == False:
+        print("Model is not trainable")
+        return
+
+    num_cls = config['load_data']['num_classes']
+    img_size = config['model']['image_size']
+    loss = config['model']['loss']
+    optimizer = config['model']['optimizer']
+    metrics = config['model']['metrics']
+    epochs = config['model']['epochs']
+    model_path = config['model']['sav_dir']
+
+    print("[INFO] Starting initial training...")
+
+    base_model = VGG19(input_shape=img_size + [3], weights = 'imagenet', include_top = False)
+    for layer in base_model.layers:
+        layer.trainable = False
+
+    x = Flatten()(base_model.output)
+    output = Dense(num_cls, activation='softmax')(x)
+    model = Model(inputs = base_model.input, outputs = output)
+
+    model.compile(loss = loss, optimizer = optimizer, metrics = metrics)   
+    print(model.summary())
+
+    train_set, test_set = create_data_generators(config)
+
+    history = model.fit(train_set,
                           epochs = epochs,
                           validation_data = test_set,
                           steps_per_epoch = len(train_set),
@@ -81,14 +91,79 @@ def train_model(config_file):
     plt.legend()
     plt.savefig('reports/model_performance.png')
 
-    mod.save(model_path)
-    print("Model Saved Successfully....!")
+    model.save(model_path)
+    print("[INFO] Model Saved Successfully....!")
 
+def fine_tune_model(config_file):
+    config = read_params(config_file)
+
+    model_path = config['model']['sav_dir']
+
+    # Load saved model
+    model = load_model(model_path)
+    print("[INFO] Loaded model for fine-tuning from:", model_path)
+
+    for layer in model.layers[-4:]:
+        layer.trainable = True
     
+    image_size = tuple(config['model']['image_size'])
+    loss = config['model']['loss']
+    metrics = config['model']['metrics']
+    # optimizer = config['model']['optimizer']
+    fine_tune_epochs = config['model']['fine_tune_epochs']
+
+    model.compile(
+        loss=loss,
+        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
+        metrics=metrics
+        # optimizer=optimizer
+    )
+    print(model.summary())
+
+    train_set, test_set = create_data_generators(config)
+
+    # Callbacks
+    callbacks = [
+        EarlyStopping(monitor='val_loss', patience=2, restore_best_weights=True, verbose=1),
+        ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=1, verbose=1)
+    ]
+
+    history = model.fit(
+        train_set,
+        epochs=fine_tune_epochs,
+        validation_data=test_set,
+        steps_per_epoch=len(train_set),
+        validation_steps=len(test_set),
+        callbacks=callbacks
+    )
+
+    # os.makedirs('reports', exist_ok=True)
+    plt.plot(history.history['loss'], label='train_loss')
+    plt.plot(history.history['val_loss'], label='val_loss')
+    plt.plot(history.history['accuracy'], label='train_acc')
+    plt.plot(history.history['val_accuracy'], label='val_acc')
+    plt.legend()
+    plt.savefig('reports/fine_tuned_performance.png')
+    print("Fine-tuning chart saved to reports/fine_tuned_performance.png")
+
+    fine_tuned_model_path = model_path.replace(".h5", "_finetuned.h5")
+    model.save(fine_tuned_model_path)
+    print(f"[INFO] Fine-tuned model saved successfully at: {fine_tuned_model_path}")
+
+
 
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--config', default='params.yaml')
     passed_args=parser.parse_args()
-    train_model(config_file=passed_args.config)
+
+    config = read_params(passed_args.config)
+    mode = config.get("run_config", {}).get("mode", "train")
+    
+    if mode == "train":
+        train_model(config_file=passed_args.config)
+    elif mode == "fine_tune":
+        fine_tune_model(config_file=passed_args.config)
+    else:
+        print("[ERROR] Invalid mode in config. Use 'train' or 'fine_tune'.")

@@ -26,6 +26,7 @@ model:
   epochs: 15
   #batch_size: 32
   sav_dir: models/trained.h5
+  fine_tune_epochs: 5
 
 img_augment:
   rescale: 0.00392156862745098
@@ -36,6 +37,9 @@ img_augment:
   brightness_range: [0.8, 1.2]
   batch_size: 64
   class_mode: 'categorical'
+
+run_config:
+  mode: "train"  # Options: "train" or "fine_tune"
 
 model_dir: models
 
