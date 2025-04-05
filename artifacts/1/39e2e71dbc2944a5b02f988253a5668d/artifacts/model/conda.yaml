@@ -1,0 +1,9 @@
+channels:
+- conda-forge
+dependencies:
+- python=3.9.21
+- pip<=25.0.1
+- pip:
+  - mlflow==2.21.3
+  - tensorflow==2.10.1
+name: mlflow-env

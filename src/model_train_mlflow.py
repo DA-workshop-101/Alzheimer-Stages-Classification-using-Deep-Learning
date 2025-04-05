@@ -112,19 +112,97 @@ def train_model_mlflow(config_file):
         else:
             mlflow.keras.log_model(model, "model")
 
+    model.save(model_path)
+    print("[INFO] Model Saved Successfully....!")
+
+
+def fine_tune_model_mlflow(config_file):
+    config = read_params(config_file)
+
+    model_path = config['model']['sav_dir']
+
+    # Load saved model
+    model = load_model(model_path)
+    print("[INFO] Loaded model for fine-tuning from:", model_path)
+
+    for layer in model.layers[-4:]:
+        layer.trainable = True
+    
+    image_size = tuple(config['model']['image_size'])
+    loss = config['model']['loss']
+    metrics = config['model']['metrics']
+    # optimizer = config['model']['optimizer']
+    fine_tune_epochs = config['model']['fine_tune_epochs']
+
+    model.compile(
+        loss=loss,
+        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
+        metrics=metrics
+        # optimizer=optimizer
+    )
+    print(model.summary())
+
+    train_set, test_set = create_data_generators(config)
+
+    # Callbacks
+    callbacks = [
+        EarlyStopping(monitor='val_loss', patience=2, restore_best_weights=True, verbose=1),
+        ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=1, verbose=1)
+    ]
+
+    ################# START OF MLFLOW #################
+
+    mlflow_config = config['mlflow_config']
+    remote_server_uri = mlflow_config['remote_server_uri']
+    mlflow.set_tracking_uri(remote_server_uri)
+    mlflow.set_experiment(mlflow_config['experiment_name'])
+    with mlflow.start_run():
+        history = model.fit(
+                            train_set,
+                            epochs=fine_tune_epochs,
+                            validation_data=test_set,
+                            steps_per_epoch=len(train_set),
+                            validation_steps=len(test_set),
+                            callbacks=callbacks
+                            )
+        train_loss = history.history['loss'][-1]
+        val_loss = history.history['val_loss'][-1]
+        acc = history.history['accuracy'][-1]
+        val_acc = history.history['val_accuracy'][-1]
+
+        mlflow.log_param("model_name", config["model"]["name"])
+        mlflow.log_param("epochs", config["model"]["epochs"])
+        mlflow.log_param("loss", config["model"]["loss"])
+        mlflow.log_param("optimizer", config["model"]["optimizer"])
+
+        mlflow.log_metric("accuracy", acc)         
+        mlflow.log_metric("val_accuracy", val_acc)     
+        mlflow.log_metric("val_loss", val_loss)         
+        mlflow.log_metric("loss", train_loss)        
+
+        tracking_url_type_Store = urlparse(mlflow.get_artifact_uri()).scheme
+
+        if tracking_url_type_Store != "file":
+            mlflow.keras.log_model(model, "model", registered_model_name=mlflow_config["registered_model_name"])
+        else:
+            mlflow.keras.log_model(model, "model")
+
+    fine_tuned_model_path = model_path.replace(".h5", "_finetuned.h5")
+    model.save(fine_tuned_model_path)
+    print(f"[INFO] Fine-tuned model saved successfully at: {fine_tuned_model_path}")
+
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--config', default='params.yaml')
     passed_args=parser.parse_args()
-    train_model_mlflow(config_file=passed_args.config)
 
-    # config = read_params(passed_args.config)
-    # mode = config.get("run_config", {}).get("mode", "train")
+    config = read_params(passed_args.config)
+    mode = config.get("run_config", {}).get("mode", "train")
     
-    # if mode == "train":
-    #     train_model(config_file=passed_args.config)
-    # elif mode == "fine_tune":
-    #     fine_tune_model(config_file=passed_args.config)
-    # else:
-    #     print("[ERROR] Invalid mode in config. Use 'train' or 'fine_tune'.")
+    if mode == "train":
+        train_model_mlflow(config_file=passed_args.config)
+    elif mode == "fine_tune":
+        fine_tune_model_mlflow(config_file=passed_args.config)
+    else:
+        print("[ERROR] Invalid mode in config. Use 'train' or 'fine_tune'.")
