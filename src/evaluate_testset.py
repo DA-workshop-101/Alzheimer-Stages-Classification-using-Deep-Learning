@@ -1,4 +1,3 @@
-# Script is still incomplete
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
 import os
