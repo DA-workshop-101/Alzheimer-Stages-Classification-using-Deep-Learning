@@ -1,8 +1,10 @@
 pandas
-numpy
+numpy==1.26.4
 keras
-tensorflow
+tensorflow==2.10.*
 joblib
 PyYaml
 streamlit
 keras_preprocessing
+fastapi
+uvicorn

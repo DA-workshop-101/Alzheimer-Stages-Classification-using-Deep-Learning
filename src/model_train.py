@@ -11,6 +11,25 @@ from get_data import read_params
 import matplotlib.pyplot as plt
 from keras.applications.vgg19 import VGG19
 import tensorflow as tf
+import uuid
+
+def add_uuid_to_filename(file_path, uuid_len=8):
+    base_dir = os.path.dirname(file_path)
+    filename = os.path.basename(file_path)
+    name, ext = os.path.splitext(filename)
+
+    unique_id = uuid.uuid4().hex[:uuid_len]
+    new_filename = f"{name}_{unique_id}{ext}"
+    return os.path.join(base_dir, new_filename)
+
+def add_uuid_and_suffix_to_filename(file_path, suffix="", uuid_len=8):
+    base_dir = os.path.dirname(file_path)
+    filename = os.path.basename(file_path)
+    name, ext = os.path.splitext(filename)
+
+    unique_id = uuid.uuid4().hex[:uuid_len]
+    new_filename = f"{name}_{suffix}_{unique_id}{ext}"
+    return os.path.join(base_dir, new_filename)
 
 def create_data_generators(config):
     img_size = tuple(config['model']['image_size'])
@@ -89,9 +108,9 @@ def train_model(config_file):
     plt.plot(history.history['accuracy'], label = 'train_acc')
     plt.plot(history.history['val_accuracy'], label = 'val_acc')
     plt.legend()
-    plt.savefig('reports/model_performance.png')
+    plt.savefig(f'reports/model_performance_{uuid.uuid4().hex[:8]}.png')
 
-    model.save(model_path)
+    model.save(add_uuid_to_filename(model_path))
     print("[INFO] Model Saved Successfully....!")
 
 def fine_tune_model(config_file):
@@ -143,10 +162,10 @@ def fine_tune_model(config_file):
     plt.plot(history.history['accuracy'], label='train_acc')
     plt.plot(history.history['val_accuracy'], label='val_acc')
     plt.legend()
-    plt.savefig('reports/fine_tuned_performance.png')
+    plt.savefig(f'reports/fine_tuned_performance_{uuid.uuid4().hex[:8]}.png')
     print("Fine-tuning chart saved to reports/fine_tuned_performance.png")
 
-    fine_tuned_model_path = model_path.replace(".h5", "_finetuned.h5")
+    fine_tuned_model_path = add_uuid_and_suffix_to_filename(model_path, suffix="finetuned")
     model.save(fine_tuned_model_path)
     print(f"[INFO] Fine-tuned model saved successfully at: {fine_tuned_model_path}")
 

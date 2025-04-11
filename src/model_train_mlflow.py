@@ -14,6 +14,7 @@ import tensorflow as tf
 import mlflow
 from urllib.parse import urlparse
 import mlflow.keras
+from model_train import add_uuid_to_filename, add_uuid_and_suffix_to_filename
 
 def create_data_generators(config):
     img_size = tuple(config['model']['image_size'])
@@ -112,7 +113,7 @@ def train_model_mlflow(config_file):
         else:
             mlflow.keras.log_model(model, "model")
 
-    model.save(model_path)
+    model.save(add_uuid_to_filename(model_path))
     print("[INFO] Model Saved Successfully....!")
 
 
@@ -187,7 +188,7 @@ def fine_tune_model_mlflow(config_file):
         else:
             mlflow.keras.log_model(model, "model")
 
-    fine_tuned_model_path = model_path.replace(".h5", "_finetuned.h5")
+    fine_tuned_model_path = add_uuid_and_suffix_to_filename(model_path, suffix="finetuned")
     model.save(fine_tuned_model_path)
     print(f"[INFO] Fine-tuned model saved successfully at: {fine_tuned_model_path}")
 
