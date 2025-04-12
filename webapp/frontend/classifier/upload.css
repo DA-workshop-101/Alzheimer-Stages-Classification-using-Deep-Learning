@@ -1,4 +1,4 @@
-/* Base Styles */
+/* Reset and base styling */
 * {
   margin: 0;
   padding: 0;
@@ -22,9 +22,9 @@ a {
   margin: 0 auto;
 }
 
-/* Navbar */
+/* Header */
 .navbar {
-  background-color: white;
+  background: white;
   padding: 20px 0;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -84,159 +84,141 @@ a {
   font-weight: bold;
 }
 
-/* Hero Section */
-.hero {
-  background: linear-gradient(135deg, #d946ef, #7c3aed);
-  color: white;
+/* Main */
+.main-section {
   text-align: center;
-  padding: 80px 20px;
+  padding: 4rem 1rem;
 }
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
-.hero p {
-  max-width: 720px;
-  margin: 10px auto;
-  font-size: 1.15rem;
+.subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 2rem;
 }
 
-.cta-button {
-  display: inline-block;
-  margin-top: 25px;
-  background-color: rgb(255, 255, 255);
-  color: #7c3aed;
-  font-weight: 600;
-  padding: 14px 28px;
-  border-radius: 6px;
-  transition: background-color 0.3s;
-  font-size: x-large;
-}
-
-.cta-button:hover {
-  background-color: #f3e8ff;
-}
-
-.cta-button-2 {
-  display: inline-block;
-  margin-top: 25px;
-  background-color: #7c3aed;
-  color: #ffffff;
-  font-weight: 600;
-  padding: 14px 28px;
-  border-radius: 6px;
-  transition: background-color 0.3s;
-  font-size: x-large;
-}
-
-.cta-button-2:hover {
-  background-color: #f3e8ff;
-  color: #7c3aed;
-}
-
-
-/* About Section */
-.about {
-  background-color: #f9f9f9;
-  padding: 70px 20px;
-  text-align: center;
-}
-
-.about h2 {
-  font-size: 2rem;
-  margin-bottom: 24px;
-}
-
-.about p {
-  max-width: 850px;
-  margin: auto;
-  font-size: 1rem;
-  color: #444;
-  line-height: 1.8;
-}
-
-/* Features Section */
-.features {
-  padding: 70px 20px;
-  text-align: center;
-}
-
-.features h2 {
-  font-size: 2rem;
-  margin-bottom: 36px;
-}
-
-.feature-grid {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 24px;
-}
-
-.feature-card {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 14px;
+.upload-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  flex: 1;
-  min-width: 280px;
-  transition: transform 0.3s;
+}
+
+.upload-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 4rem 2rem;
+  transition: border-color 0.3s ease;
   cursor: pointer;
 }
 
-.feature-card:hover {
-  transform: translateY(-4px);
+.upload-box:hover {
+  background-color: #f9fafb;
 }
 
-.feature-card img {
-  height: 48px;
-  margin-bottom: 18px;
-}
-
-.feature-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #4b0082;
-}
-
-.feature-card p {
-  font-size: 0.95rem;
-  color: #555;
-}
-
-/* How It Works */
-.workflow {
-  background-color: #fff;
-  padding: 70px 20px;
-  text-align: center;
-}
-
-.workflow h2 {
-  font-size: 2rem;
-  margin-bottom: 32px;
-}
-
-.workflow .steps {
-  text-align: left;
-  max-width: 700px;
-  margin: 0 auto 40px;
-  padding-left: 20px;
-}
-
-.workflow .steps li {
-  margin-bottom: 24px;
-  font-size: 1.05rem;
-  list-style: decimal;
-  color: #333;
-}
-
-.workflow .steps li strong {
+.upload-label {
   display: block;
-  color: #6b21a8;
-  font-size: 1.1rem;
-  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.upload-label img {
+  width: 32px;
+  margin-bottom: 1rem;
+}
+
+.upload-label p {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0.5rem 0;
+}
+
+.upload-label span {
+  display: block;
+  font-size: 1rem;
+  color: #475569;
+}
+
+.upload-label small {
+  color: #9ca3af;
+  font-size: 12px;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+
+/* Preview Card */
+.preview-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#previewImage {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  object-fit: contain;
+}
+
+.analyze-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Gap between icon and text */
+  background-color: #1976f2;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  width: 100%;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.analyze-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Note Box */
+.note-box {
+  background: #eff6ff;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1e3a8a;
+  text-align: left;
 }
 
 .bottom-bar {
@@ -314,35 +296,7 @@ a {
   color: #7c3aed;
 }
 
-/* ============================
-   Responsive Media Queries
-   ============================ */
-
-/* Phones (≤ 600px) */
 @media screen and (max-width: 600px) {
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  .hero p {
-    font-size: 0.95rem;
-  }
-
-  .cta-button {
-    padding: 12px 20px;
-    font-size: 0.95rem;
-  }
-
-  .about h2,
-  .features h2,
-  .workflow h2 {
-    font-size: 1.6rem;
-  }
-
-  .workflow .steps {
-    padding-left: 0;
-  }
-
   .bottom-bar{
     display: flex;
     flex-direction: column;
@@ -354,7 +308,7 @@ a {
     align-items: flex-start;
     gap: 12px;
   }
-
+  
   .navbar nav a {
     margin: 10px 10px 0 0;
     font-size: 0.9rem;

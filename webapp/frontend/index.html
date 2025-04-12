@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ADAPT - Alzheimer's Disease Analysis</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
   <header class="navbar">
-    <div class="container">
+    <div class="container header-content">
       <div class="logo">
-        <img src="assets/logo.svg" alt="ADAPT logo" />
-        <span>ADAPT - Alzheimer Disease Analysis and Prediction Tool</span>
+        <img src="./assets/logo.svg" alt="ADAPT Logo" />
+        <div class="logo-text">
+          <span>ADAPT</span>
+          <p>Alzheimer Disease Analysis and Prediction Tool</p>
+        </div>
       </div>
       <nav>
-        <a href="#">Home</a>
-        <a href="./classification-page/classification.html">Classification Tool</a>
+        <a href="#" class="nav-link" id="homeLink">Home</a>
+        <a href="./classifier/upload.html" class="nav-link" id="toolLink">Classification Tool</a>
       </nav>
     </div>
   </header>
@@ -25,7 +30,7 @@
       <h1>ADAPT</h1>
       <p>Alzheimer Disease Analysis and Prediction Tool</p>
       <p>Advanced AI-powered classification for early detection and accurate staging of Alzheimer’s disease</p>
-      <a href="./classification-page/classification.html" class="cta-button">Try the Classification Tool</a>
+      <a href="./classifier/upload.html" class="cta-button">Try the Classification Tool</a>
     </div>
   </section>
 
@@ -35,9 +40,12 @@
       <p>
         ADAPT (Alzheimer Disease Analysis and Prediction Tool) is a cutting-edge AI system designed to assist healthcare
         professionals in the early detection and accurate staging of Alzheimer’s disease.<br /><br />
-        Using advanced deep learning algorithms trained on thousands of brain scans, ADAPT can classify brain images into
-        different stages of Alzheimer’s disease with high accuracy, providing valuable diagnostic support for clinicians.<br /><br />
-        Our tool aims to improve early intervention, treatment planning, and patient outcomes through precise classification and
+        Using advanced deep learning algorithms trained on thousands of brain scans, ADAPT can classify brain images
+        into
+        different stages of Alzheimer’s disease with high accuracy, providing valuable diagnostic support for
+        clinicians.<br /><br />
+        Our tool aims to improve early intervention, treatment planning, and patient outcomes through precise
+        classification and
         intuitive visualization of results.
       </p>
     </div>
@@ -70,15 +78,29 @@
     <div class="container">
       <h2>How It Works</h2>
       <ol class="steps">
-        <li><strong>Upload Brain Scan</strong><br />Upload MRI or CT scan images. The system accepts standard formats.</li>
-        <li><strong>AI Analysis</strong><br />Our deep learning model analyzes the image, identifying patterns associated with Alzheimer’s.</li>
-        <li><strong>Results & Visualization</strong><br />Get accuracy metrics and GradCAM visualizations of affected regions.</li>
+        <li><strong>Upload Brain Scan</strong><br />Upload MRI or CT scan images. The system accepts standard formats.
+        </li>
+        <li><strong>AI Analysis</strong><br />Our deep learning model analyzes the image, identifying patterns
+          associated with Alzheimer’s.</li>
+        <li><strong>Results & Visualization</strong><br />Get accuracy metrics and GradCAM visualizations of affected
+          regions.</li>
       </ol>
-      <a href="./classification-page/classification.html" class="cta-button-2">Try the Classification Tool</a>
+      <a href="./classifier/upload.html" class="cta-button-2">Try the Classification Tool</a>
     </div>
   </section>
 
   <footer class="footer">
+    <div class="bottom-bar">
+      <div class="branding">
+        <img src="./assets/logo.svg" alt="ADAPT Logo" class="logo" />
+        <span class="title">ADAPT - Alzheimer Disease Analysis and Prediction Tool</span>
+      </div>
+      <div class="social-icons">
+        <a href="#"><img src="./assets/github.svg" alt="GitHub" /></a>
+        <a href="#"><img src="./assets/twitter.svg" alt="Twitter" /></a>
+        <a href="#"><img src="./assets/linkedin.svg" alt="LinkedIn" /></a>
+      </div>
+    </div>
     <div class="container">
       <div class="footer-text">© 2025 ADAPT Research Team. All rights reserved.</div>
       <div class="footer-links">
@@ -88,5 +110,16 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const path = window.location.pathname;
+    if (path.includes('upload')) {
+      document.getElementById('toolLink')?.classList.add('active');
+    } else {
+      document.getElementById('homeLink')?.classList.add('active');
+    }
+  </script>
+  
 </body>
+
 </html>
