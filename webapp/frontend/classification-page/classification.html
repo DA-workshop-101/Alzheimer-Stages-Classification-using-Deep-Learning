@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPT - Alzheimer Classification</title>
+  <link rel="stylesheet" href="classify-styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <img src="../assets/logo.svg" alt="ADAPT Logo" />
+        <div class="logo-text">
+          <span>ADAPT</span>
+          <p>Alzheimer Disease Analysis and Prediction Tool</p>
+        </div>
+      </div>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="#" class="active">Classification Tool</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container main-section">
+      <h1>Alzheimer's Disease Classification Tool</h1>
+      <p class="subtitle">Upload a brain scan image to classify the stage of Alzheimer's disease</p>
+
+      <div class="upload-box">
+        <input type="file" id="upload" />
+        <label for="upload" class="upload-label">
+          <img src="../assets/upload-icon.svg" alt="Upload Icon" />
+          <p>Upload Brain Scan</p>
+          <span>Drag and drop or click to select</span>
+          <small>Supported formats: JPEG, PNG, DICOM</small>
+        </label>
+      </div>
+
+      <div class="note-box">
+        <strong>Note:</strong>
+        <span>This is a demonstration tool. In a real-world application, the classification would be performed by a trained AI model on a secure server. Always consult with healthcare professionals for medical diagnoses.</span>
+      </div>
+    </div>
+  </main>
+
+  <div class="bottom-bar">
+    <div class="branding">
+      <img src="../assets/logo.svg" alt="ADAPT Logo" class="logo" />
+      <span class="title">ADAPT - Alzheimer Disease Analysis and Prediction Tool</span>
+    </div>
+    <div class="social-icons">
+      <a href="#"><img src="../assets/github.svg" alt="GitHub" /></a>
+      <a href="#"><img src="../assets/twitter.svg" alt="Twitter" /></a>
+      <a href="#"><img src="../assets/linkedin.svg" alt="LinkedIn" /></a>
+    </div>
+  </div>
+  
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-text">© 2025 ADAPT Research Team. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

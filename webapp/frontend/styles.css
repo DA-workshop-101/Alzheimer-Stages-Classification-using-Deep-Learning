@@ -1,0 +1,309 @@
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+  background-color: white;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.logo img {
+  height: 32px;
+}
+
+.navbar nav a {
+  margin-left: 24px;
+  font-weight: 500;
+  color: #7a7a7a;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+}
+
+.navbar nav a:hover {
+  color: #7c3aed;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, #d946ef, #7c3aed);
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  max-width: 720px;
+  margin: 10px auto;
+  font-size: 1.15rem;
+}
+
+.cta-button {
+  display: inline-block;
+  margin-top: 25px;
+  background-color: rgb(255, 255, 255);
+  color: #7c3aed;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+  font-size: x-large;
+}
+
+.cta-button:hover {
+  background-color: #f3e8ff;
+}
+
+.cta-button-2 {
+  display: inline-block;
+  margin-top: 25px;
+  background-color: #7c3aed;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+  font-size: x-large;
+}
+
+.cta-button-2:hover {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+
+/* About Section */
+.about {
+  background-color: #f9f9f9;
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.about h2 {
+  font-size: 2rem;
+  margin-bottom: 24px;
+}
+
+.about p {
+  max-width: 850px;
+  margin: auto;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.8;
+}
+
+/* Features Section */
+.features {
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 2rem;
+  margin-bottom: 36px;
+}
+
+.feature-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.feature-card {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  min-width: 280px;
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+}
+
+.feature-card img {
+  height: 48px;
+  margin-bottom: 18px;
+}
+
+.feature-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #4b0082;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* How It Works */
+.workflow {
+  background-color: #fff;
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.workflow h2 {
+  font-size: 2rem;
+  margin-bottom: 32px;
+}
+
+.workflow .steps {
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  padding-left: 20px;
+}
+
+.workflow .steps li {
+  margin-bottom: 24px;
+  font-size: 1.05rem;
+  list-style: decimal;
+  color: #333;
+}
+
+.workflow .steps li strong {
+  display: block;
+  color: #6b21a8;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+/* Footer */
+.footer {
+  background-color: #f5f5f5;
+  text-align: center;
+  padding: 40px 20px 30px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.footer .footer-links {
+  margin-top: 10px;
+}
+
+.footer .footer-links a {
+  margin: 0 12px;
+  color: #777;
+  transition: color 0.3s;
+}
+
+.footer .footer-links a:hover {
+  color: #7c3aed;
+}
+
+/* ============================
+   Responsive Media Queries
+   ============================ */
+
+/* Tablets (≤ 992px) */
+@media screen and (max-width: 992px) {
+  .feature-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-card {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .navbar nav {
+    margin-top: 10px;
+  }
+
+  .navbar .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Phones (≤ 600px) */
+@media screen and (max-width: 600px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+  }
+
+  .cta-button {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .about h2,
+  .features h2,
+  .workflow h2 {
+    font-size: 1.6rem;
+  }
+
+  .workflow .steps {
+    padding-left: 0;
+  }
+
+  .navbar .container {
+    align-items: center;
+  }
+
+  .navbar nav a {
+    margin: 10px 10px 0 0;
+    font-size: 0.9rem;
+  }
+}

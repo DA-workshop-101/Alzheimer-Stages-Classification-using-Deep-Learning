@@ -1,63 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Alzheimer's Prediction</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-        }
-
-        img {
-            max-width: 300px;
-            display: block;
-            margin-top: 1rem;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADAPT - Alzheimer's Disease Analysis</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
+  <header class="navbar">
+    <div class="container">
+      <div class="logo">
+        <img src="assets/logo.svg" alt="ADAPT logo" />
+        <span>ADAPT - Alzheimer Disease Analysis and Prediction Tool</span>
+      </div>
+      <nav>
+        <a href="#">Home</a>
+        <a href="./classification-page/classification.html">Classification Tool</a>
+      </nav>
+    </div>
+  </header>
 
-    <h2>Upload Brain Scan</h2>
-    <input type="file" id="imageInput">
-    <button onclick="sendImage()">Predict</button>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>ADAPT</h1>
+      <p>Alzheimer Disease Analysis and Prediction Tool</p>
+      <p>Advanced AI-powered classification for early detection and accurate staging of Alzheimer’s disease</p>
+      <a href="./classification-page/classification.html" class="cta-button">Try the Classification Tool</a>
+    </div>
+  </section>
 
-    <h3>Prediction:</h3>
-    <p id="result"></p>
+  <section class="about">
+    <div class="container">
+      <h2>About ADAPT</h2>
+      <p>
+        ADAPT (Alzheimer Disease Analysis and Prediction Tool) is a cutting-edge AI system designed to assist healthcare
+        professionals in the early detection and accurate staging of Alzheimer’s disease.<br /><br />
+        Using advanced deep learning algorithms trained on thousands of brain scans, ADAPT can classify brain images into
+        different stages of Alzheimer’s disease with high accuracy, providing valuable diagnostic support for clinicians.<br /><br />
+        Our tool aims to improve early intervention, treatment planning, and patient outcomes through precise classification and
+        intuitive visualization of results.
+      </p>
+    </div>
+  </section>
 
-    <h3>Grad-CAM Visualization:</h3>
-    <img id="gradcamImage" src="">
+  <section class="features">
+    <div class="container">
+      <h2>Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <img src="assets/icon1.svg" alt="Advanced Classification" />
+          <h3>Advanced Classification</h3>
+          <p>Accurately classifies brain scans into different stages using state-of-the-art deep learning models.</p>
+        </div>
+        <div class="feature-card">
+          <img src="assets/icon2.svg" alt="Detailed Metrics" />
+          <h3>Detailed Metrics</h3>
+          <p>Provides accuracy metrics and confidence scores to support clinical decision-making.</p>
+        </div>
+        <div class="feature-card">
+          <img src="assets/icon3.svg" alt="Visual Explanations" />
+          <h3>Visual Explanations</h3>
+          <p>Utilizes GradCAM technology to highlight regions of interest in brain scans.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        async function sendImage() {
-            const input = document.getElementById('imageInput');
-            if (!input.files.length) {
-                alert('Please select an image.');
-                return;
-            }
+  <section class="workflow">
+    <div class="container">
+      <h2>How It Works</h2>
+      <ol class="steps">
+        <li><strong>Upload Brain Scan</strong><br />Upload MRI or CT scan images. The system accepts standard formats.</li>
+        <li><strong>AI Analysis</strong><br />Our deep learning model analyzes the image, identifying patterns associated with Alzheimer’s.</li>
+        <li><strong>Results & Visualization</strong><br />Get accuracy metrics and GradCAM visualizations of affected regions.</li>
+      </ol>
+      <a href="./classification-page/classification.html" class="cta-button-2">Try the Classification Tool</a>
+    </div>
+  </section>
 
-            const formData = new FormData();
-            formData.append('file', input.files[0]);
-
-            const response = await fetch('http://localhost:8000/predict', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                alert('Prediction failed!');
-                return;
-            }
-
-            const data = await response.json();
-            document.getElementById('result').innerText =
-                `Class: ${data.predicted_class}(${data.class_code}) | Confidence: ${data.confidence}%`;
-            document.getElementById('gradcamImage').src = `data:image/png;base64,${data.gradcam}`;
-        }
-    </script>
-
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-text">© 2025 ADAPT Research Team. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
 </body>
-
 </html>
