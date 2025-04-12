@@ -43,6 +43,7 @@ a {
   gap: 12px;
   height: 24px;
   width: 24px;
+  cursor: default;
 }
 
 .logo img {
@@ -86,10 +87,11 @@ a {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, #d946ef, #7c3aed);
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
   color: white;
   text-align: center;
   padding: 80px 20px;
+  box-shadow: inset 0 0 30px rgba(58, 58, 58, 0.45);
 }
 
 .hero h1 {
@@ -113,6 +115,7 @@ a {
   border-radius: 6px;
   transition: background-color 0.3s;
   font-size: x-large;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .cta-button:hover {
@@ -129,6 +132,7 @@ a {
   border-radius: 6px;
   transition: background-color 0.3s;
   font-size: x-large;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .cta-button-2:hover {
@@ -183,7 +187,7 @@ a {
   flex: 1;
   min-width: 280px;
   transition: transform 0.3s;
-  cursor: pointer;
+  cursor: default;
 }
 
 .feature-card:hover {

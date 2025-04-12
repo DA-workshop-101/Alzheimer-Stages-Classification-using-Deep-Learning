@@ -47,11 +47,14 @@
             <span id="fileName">IM000002.jpg</span>
             <button id="removeFile" class="close-btn">×</button>
           </div>
-          <img id="previewImage" alt="Brain Scan Preview" />
-          <button class="analyze-btn">
+          <div class="preview-image-area">
+            <img id="previewImage" alt="Brain Scan Preview" />
+          </div>
+          <button onclick="sendImage()" class="analyze-btn">
             <img id="btn-logo" src="../assets/upload-icon2.svg" alt="Upload Icon" />
             <span>Analyze Brain Scan</span>
           </button>
+          <div id="results-container"></div>
         </div>
       </div>
 
@@ -65,7 +68,7 @@
   </main>
 
 
-
+  
 
   <footer class="footer">
     <div class="bottom-bar">
