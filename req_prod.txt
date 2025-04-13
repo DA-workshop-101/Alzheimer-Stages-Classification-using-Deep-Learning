@@ -1,12 +1,17 @@
-pandas
-numpy==1.26.4
+# Core ML libraries
+# tensorflow==2.10.*
+tensorflow==2.15.*
 keras
-tensorflow==2.10.*
-joblib
-PyYaml
-streamlit
 keras_preprocessing
-fastapi
-uvicorn
-python-multipart
+pandas
+# numpy==1.26.4
+numpy
+joblib
+PyYAML
 pillow
+opencv-python
+
+# FastAPI + server
+fastapi
+uvicorn[standard]
+python-multipart

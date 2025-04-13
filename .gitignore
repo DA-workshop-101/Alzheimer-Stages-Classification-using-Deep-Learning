@@ -59,6 +59,7 @@ target/
 # DotEnv configuration
 .env
 .venv/
+.venv-prod/
 data/
 data_source/
 test.py
