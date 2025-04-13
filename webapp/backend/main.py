@@ -2,20 +2,23 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from fastapi import FastAPI, File, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, File, UploadFile # type: ignore
+from fastapi.middleware.cors import CORSMiddleware # type: ignore
 from .predictor import predict
-import uvicorn
+import uvicorn # type: ignore
 
 app = FastAPI()
 
 os.environ["RUN_MAIN"] = "true"
 
+frontend_url = os.getenv("FRONTEND_URL", "http://127.0.0.1:3000/webapp/frontend/index.html") 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"]
+    allow_origins=[frontend_url],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "Authorization"]
 )
 
 
