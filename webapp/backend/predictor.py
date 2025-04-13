@@ -1,3 +1,8 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+from functools import lru_cache
+
 from src.get_data import read_params
 from keras.models import load_model
 import numpy as np
@@ -12,7 +17,11 @@ config = read_params("params.yaml")
 model_path = config['model']['sav_dir']
 class_names = list(config['raw_data']['classes'])
 
-model = load_model(model_path)
+@lru_cache()
+def get_model():
+    return load_model(model_path)
+
+model = get_model()
 
 def preprocess_image(image_bytes):
     image = Image.open(io.BytesIO(image_bytes)).convert("RGB")

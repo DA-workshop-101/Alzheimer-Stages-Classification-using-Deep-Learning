@@ -7,9 +7,9 @@ const removeBtn = document.getElementById("removeFile");
 const analyzeBtn = document.querySelector('.analyze-btn');
 const classifyResult = document.getElementById('results-container');
 
-// const statusDiv = document.getElementById('status');
-// const classificationResult = document.getElementById('classification-result');
-// const gradcamVisualization = document.getElementById('gradcam-visualization');
+const statusDiv = document.getElementById('status');
+const classificationResult = document.getElementById('classification-result');
+const gradcamVisualization = document.getElementById('gradcam-visualization');
 
 // Handle image preview
 uploadInput.addEventListener("change", (e) => {
@@ -50,7 +50,7 @@ async function sendImage() {
 
 
   try {
-    const response = await fetch('http://localhost:8000/predict', {
+    const response = await fetch('https://adapt-api-h0ym.onrender.com/predict', {
       method: 'POST',
       body: formData
     });

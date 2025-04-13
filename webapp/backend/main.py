@@ -9,6 +9,8 @@ import uvicorn
 
 app = FastAPI()
 
+os.environ["RUN_MAIN"] = "true"
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -29,5 +31,5 @@ async def predict_endpoint(file: UploadFile = File(...)):
     return result
 
 
-if __name__=="__main__" :
-    uvicorn.run(app,host='localhost',port=8000)
+if __name__=="__main__" and os.getenv("RUN_MAIN") == "true" :
+    uvicorn.run(app,host='0.0.0.0',port=8000)
