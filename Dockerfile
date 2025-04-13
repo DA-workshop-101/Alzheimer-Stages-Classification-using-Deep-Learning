@@ -14,6 +14,11 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
+# Install system dependencies for OpenCV
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libgl1-mesa-glx && \
+    rm -rf /var/lib/lists
+
 #Copy Only Necessary files from the builder stage
 COPY --from=builder /root/.local /root/.local
 COPY models/ models/
