@@ -50,7 +50,7 @@ async function sendImage() {
 
 
   try {
-    const response = await fetch('mri-dl-fastapi-production.up.railway.app/predict', {
+    const response = await fetch('https://mri-dl-fastapi-production.up.railway.app/predict', {
       method: 'POST',
       body: formData,
       headers: {
