@@ -26,7 +26,7 @@ model:
   epochs: 15
   #batch_size: 32
   sav_dir: models/trained.h5
-  fine_tune_epochs: 5
+  fine_tune_epochs: 10
 
 img_augment:
   rescale: 0.00392156862745098

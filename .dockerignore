@@ -1,0 +1,32 @@
+# Bytecode & caches
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+
+# Virtual environments
+.venv/
+.venv-prod/
+
+# Data, outputs, and unused frontend
+artifacts/
+data/
+data_source/
+reports/
+references/
+webapp/frontend/
+
+# Version control & metadata
+.git/
+.gitignore
+.mlfow.db
+LICENSE
+tox.ini
+
+# CI/CD & local env files
+.github/
+.env
+
+# Misc
+*.log
+*.sqlite3
