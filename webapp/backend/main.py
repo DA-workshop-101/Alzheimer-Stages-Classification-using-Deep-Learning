@@ -11,17 +11,17 @@ app = FastAPI()
 
 os.environ["RUN_MAIN"] = "true"
 
-frontend_url = os.getenv("FRONTEND_URL", "http://127.0.0.1:3000") 
+# frontend_url = os.getenv("FRONTEND_URL", "http://127.0.0.1:3000") 
 
-print("Frontend URL (for CORS):", frontend_url)
+# print("Frontend URL (for CORS):", frontend_url)
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[frontend_url],
-    allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Authorization"]
+    allow_origins=["https://da-workshop-101.github.io"],
+    allow_credentials=True,
+    allow_methods=["*"],  # ["GET", "POST"]
+    allow_headers=["*"]   # ["Content-Type", "Authorization"]
 )
 
 

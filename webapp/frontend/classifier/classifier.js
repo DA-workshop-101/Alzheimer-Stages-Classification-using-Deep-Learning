@@ -52,8 +52,7 @@ async function sendImage() {
   try {
     const response = await fetch('https://adapt-api-h0ym.onrender.com/predict', {
       method: 'POST',
-      body: formData,
-      mode: 'non-cors'
+      body: formData
     });
 
     if (!response.ok) {
