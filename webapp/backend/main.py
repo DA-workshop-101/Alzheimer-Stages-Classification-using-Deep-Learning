@@ -32,8 +32,10 @@ async def ping():
 
 @app.post("/predict")
 async def predict_endpoint(file: UploadFile = File(...)):
+    print("Received file for prediction...")
     image_bytes = await file.read()
     result = predict(image_bytes)
+    print("Prediction complete.")
     return result
 
 
