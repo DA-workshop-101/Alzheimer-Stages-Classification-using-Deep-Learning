@@ -45,4 +45,4 @@ COPY params.yaml .
 EXPOSE 8000
 
 # Default command
-CMD ["sh", "-c", "uvicorn webapp.backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn webapp.backend.main:app --host 0.0.0.0 --port ${PORT:-8000} --timeout-keep-alive 120"]
