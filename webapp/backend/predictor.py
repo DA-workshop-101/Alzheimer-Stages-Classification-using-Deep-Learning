@@ -46,13 +46,13 @@ def predict(image_bytes):
     full_class = label_map.get(short_class, short_class)
     confidence = float(np.max(probs) * 100)
 
-    gradcam = generate_gradcam(image_array, predicted_class_idx)
+    # gradcam = generate_gradcam(image_array, predicted_class_idx)
 
     return {
         "predicted_class": full_class,
         "class_code": short_class,
         "confidence": round(confidence, 2),
-        "gradcam": gradcam
+        # "gradcam": gradcam
     }
 
 
