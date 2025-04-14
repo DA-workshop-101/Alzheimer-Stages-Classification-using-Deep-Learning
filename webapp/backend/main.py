@@ -18,7 +18,7 @@ os.environ["RUN_MAIN"] = "true"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://adapt-webapp-007.netlify.app/"],
+    allow_origins=["https://adapt-webapp-007.netlify.app/", "https://da-workshop-101.github.io/"],
     allow_credentials=True,
     allow_methods=["*"],  # ["GET", "POST"]
     allow_headers=["*"]   # ["Content-Type", "Authorization"]
