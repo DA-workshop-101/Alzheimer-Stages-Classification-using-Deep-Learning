@@ -15,10 +15,20 @@ os.environ["RUN_MAIN"] = "true"
 
 # print("Frontend URL (for CORS):", frontend_url)
 
+origins = [
+    "http://localhost", # For local frontend testing
+    "http://localhost:8000", 
+
+    # "https://your-firebase-app-name.web.app",  # Your Firebase Hosting URL
+    # "https://your-custom-domain.com", # If you use a custom domain with Firebase
+    
+    "https://adapt-webapp-007.netlify.app/",
+    "https://da-workshop-101.github.io/",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://adapt-webapp-007.netlify.app/", "https://da-workshop-101.github.io/"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],  # ["GET", "POST"]
     allow_headers=["*"]   # ["Content-Type", "Authorization"]
@@ -27,7 +37,7 @@ app.add_middleware(
 
 @app.get("/ping")
 async def ping():
-    return "hello,main jinda hun"
+    return "hello, mic check 1 2 3...."
 
 
 @app.post("/predict")
@@ -44,4 +54,4 @@ async def predict_endpoint(file: UploadFile = File(...)):
 
 
 # if __name__=="__main__" and os.getenv("RUN_MAIN") == "true" :
-#     uvicorn.run(app,host='0.0.0.0',port=8000)
+#     uvicorn.run(app, host='0.0.0.0',port=8000)
