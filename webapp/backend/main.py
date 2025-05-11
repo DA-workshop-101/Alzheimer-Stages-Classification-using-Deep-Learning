@@ -23,7 +23,7 @@ origins = [
     # "https://your-custom-domain.com", # If you use a custom domain with Firebase
     
     "https://adapt-webapp-007.netlify.app/",
-    "https://da-workshop-101.github.io/",
+    "https://da-workshop-101.github.io/Alzheimer-Stages-Classification-using-Deep-Learning/webapp/frontend/",
 ]
 
 app.add_middleware(
