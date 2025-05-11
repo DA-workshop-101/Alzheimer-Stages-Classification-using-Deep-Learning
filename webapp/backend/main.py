@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'
 
 from fastapi import FastAPI, File, UploadFile # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
-from predictor import predict
+from webapp.backend.predictor import predict
 import uvicorn # type: ignore
 
 app = FastAPI()
