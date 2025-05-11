@@ -2,6 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
+from fastapi.responses import JSONResponse # type: ignore
 from fastapi import FastAPI, File, UploadFile # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 from webapp.backend.predictor import predict
@@ -16,14 +17,16 @@ os.environ["RUN_MAIN"] = "true"
 # print("Frontend URL (for CORS):", frontend_url)
 
 origins = [
-    # "http://localhost", # For local frontend testing
-    # "http://localhost:8000", 
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost",
+    "http://127.0.0.1", 
 
     # "https://your-firebase-app-name.web.app",  # Your Firebase Hosting URL
     # "https://your-custom-domain.com", # If you use a custom domain with Firebase
     
-    "https://adapt-webapp-007.netlify.app/",
-    "https://da-workshop-101.github.io/Alzheimer-Stages-Classification-using-Deep-Learning/webapp/frontend/",
+    "https://adapt-webapp-007.netlify.app",
+    "https://da-workshop-101.github.io",
 ]
 
 app.add_middleware(
@@ -48,10 +51,11 @@ async def predict_endpoint(file: UploadFile = File(...)):
         print("File read complete.")
         result = predict(image_bytes)
         print("Prediction complete.")
+        return result
     except Exception as e:
         print(f"Error during prediction: {e}")
-    return result
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 
-# if __name__=="__main__" and os.getenv("RUN_MAIN") == "true" :
-#     uvicorn.run(app, host='0.0.0.0',port=8000)
+if __name__=="__main__" and os.getenv("RUN_MAIN") == "true" :
+    uvicorn.run(app, host='0.0.0.0',port=8000)

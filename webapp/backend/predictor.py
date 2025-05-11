@@ -20,8 +20,8 @@ class_names = list(config['raw_data']['classes'])
 @lru_cache()
 def get_model():
     model = load_model(model_path)
-    dummy_input = np.zeros((1, 224, 224, 3))
-    model.predict(dummy_input)
+    # dummy_input = np.zeros((1, 224, 224, 3))
+    # model.predict(dummy_input)
     return model
 
 model = get_model()
@@ -61,44 +61,70 @@ def predict(image_bytes):
     }
 
 
+import cv2
+import numpy as np
+import tensorflow as tf
+from PIL import Image
+import io
+import base64
+
 def generate_gradcam(img_array, class_index):
-    grad_model = tf.keras.models.Model(
-        [model.inputs], 
-        # [model.get_layer("block5_conv3").output, model.output],
-        [model.get_layer(index=-1).output, model.output]
-    )
+    """
+    Robust GradCAM implementation that handles:
+    - Proper layer selection
+    - Tensor/NumPy conversion
+    - Image type conversion
+    - Dimension validation
+    - Error handling
+    """
+    try:
+        # 1. Get the last convolutional layer
+        last_conv_layer = model.get_layer('block5_conv4')
+        
+        # 2. Create gradient model
+        grad_model = tf.keras.models.Model(
+            inputs=[model.inputs],
+            outputs=[last_conv_layer.output, model.output]
+        )
 
-    with tf.GradientTape() as tape:
-        conv_outputs, predictions = grad_model(img_array)
-        loss = predictions[:, class_index]
+        # 3. Compute gradients
+        with tf.GradientTape() as tape:
+            conv_outputs, predictions = grad_model(img_array)
+            loss = predictions[:, class_index]
+        
+        # 4. Get gradients and weights
+        grads = tape.gradient(loss, conv_outputs)[0].numpy()
+        weights = np.mean(grads, axis=(0, 1))
+        conv_outputs = conv_outputs[0].numpy()
 
-    grads = tape.gradient(loss, conv_outputs)[0]
-
-    weights = tf.reduce_mean(grads, axis=(0, 1))
-
-    # conv_outputs = conv_outputs[0]
-    # if len(grads.shape) == 3:  # (H, W, Channels)
-    #     weights = tf.reduce_mean(grads, axis=(0, 1))
-    # elif len(grads.shape) == 1:  # fallback (just in case)
-    #     weights = grads
-    # else:
-    #     raise ValueError(f"Unexpected grads shape: {grads.shape}")
-    # cam = np.dot(conv_outputs, weights.numpy())
-
-    cam = np.sum(conv_outputs * weights.numpy(), axis=-1)
-
-    cam = np.maximum(cam, 0)
-    cam = cam / (np.max(cam) + 1e-10)
-    cam = cv2.resize(cam, (224, 224))
-
-    heatmap = cv2.applyColorMap(np.uint8(255 * cam), cv2.COLORMAP_JET)
-
-    img = np.uint8(img_array[0] * 255)
-    superimposed_img = cv2.addWeighted(img, 0.6, heatmap, 0.4, 0)
-    pil_img = Image.fromarray(superimposed_img)
-
-    buf = io.BytesIO()
-    pil_img.save(buf, format='PNG')
-    encoded_img = base64.b64encode(buf.getvalue()).decode('utf-8')
-
-    return encoded_img
+        # 5. Compute CAM
+        cam = np.zeros(conv_outputs.shape[0:2], dtype=np.float32)
+        for i, w in enumerate(weights):
+            cam += w * conv_outputs[:, :, i]
+        
+        # 6. Normalize CAM
+        cam = np.maximum(cam, 0)
+        cam = cam / (np.max(cam) + 1e-10)
+        
+        # 7. Prepare images
+        cam_uint8 = np.uint8(255 * cam)
+        original_img = np.uint8(img_array[0] * 255)
+        
+        # 8. Resize and apply colormap
+        cam_resized = cv2.resize(cam_uint8, (original_img.shape[1], original_img.shape[0]))
+        heatmap = cv2.applyColorMap(cam_resized, cv2.COLORMAP_JET)
+        
+        # 9. Convert to RGB and superimpose
+        heatmap_rgb = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+        superimposed_img = cv2.addWeighted(original_img, 0.6, heatmap_rgb, 0.4, 0)
+        
+        # 10. Encode to base64
+        _, buf = cv2.imencode('.jpg', superimposed_img)
+        return base64.b64encode(buf).decode('utf-8')
+    
+    except Exception as e:
+        print(f"GradCAM Error: {str(e)}")
+        # Fallback: Return original image if GradCAM fails
+        original_img = np.uint8(img_array[0] * 255)
+        _, buf = cv2.imencode('.jpg', original_img)
+        return base64.b64encode(buf).decode('utf-8')

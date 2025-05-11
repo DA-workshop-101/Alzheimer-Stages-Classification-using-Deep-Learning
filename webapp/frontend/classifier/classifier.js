@@ -52,10 +52,7 @@ async function sendImage() {
   try {
     const response = await fetch("http://localhost:8000/predict", {  //'https://mri-dl-fastapi-production.up.railway.app/predict', "https://adapt-api-h0ym.onrender.com/predict"
       method: 'POST',
-      body: formData,
-      headers: {
-        "Accept": "application/json"
-      }
+      body: formData
     });
 
     if (!response.ok) {
