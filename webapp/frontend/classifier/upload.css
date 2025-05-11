@@ -308,7 +308,7 @@ h1 {
   padding: 15px;
 }
 
-#results-container{
+#results-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -352,7 +352,7 @@ h1 {
   color: oklch(55.4% 0.046 257.417);
 }
 
-.predicted-class>span:last-of-type{
+.predicted-class>span:last-of-type {
   height: 25px;
   border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
@@ -379,12 +379,12 @@ h1 {
   display: block;
   height: 100%;
   width: 0%;
-  background-color: #4caf50; 
+  background-color: #4caf50;
   transition: width 0.5s ease;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
-.confidence-values{
+.confidence-values {
   display: flex;
   gap: 5px;
   align-items: center;
@@ -401,12 +401,12 @@ h1 {
   border-radius: 5px;
 }
 
-.gradcam-title-text{
+.gradcam-title-text {
   font-size: 1.1rem;
   font-weight: 550;
 }
 
-.gradcam-area{
+.gradcam-area {
   display: flex;
   justify-content: center;
   padding: 10px;
@@ -456,5 +456,10 @@ h1 {
 
   .navbar nav {
     margin-top: 10px;
+  }
+
+  .predicted-class>span:last-of-type {
+    height: 35px;
+    font-size: smaller;
   }
 }
