@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'
 
 from fastapi import FastAPI, File, UploadFile # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
-from .predictor import predict
+from predictor import predict
 import uvicorn # type: ignore
 
 app = FastAPI()
@@ -16,8 +16,8 @@ os.environ["RUN_MAIN"] = "true"
 # print("Frontend URL (for CORS):", frontend_url)
 
 origins = [
-    "http://localhost", # For local frontend testing
-    "http://localhost:8000", 
+    # "http://localhost", # For local frontend testing
+    # "http://localhost:8000", 
 
     # "https://your-firebase-app-name.web.app",  # Your Firebase Hosting URL
     # "https://your-custom-domain.com", # If you use a custom domain with Firebase

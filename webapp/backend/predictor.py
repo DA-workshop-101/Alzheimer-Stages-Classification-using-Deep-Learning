@@ -19,7 +19,10 @@ class_names = list(config['raw_data']['classes'])
 
 @lru_cache()
 def get_model():
-    return load_model(model_path)
+    model = load_model(model_path)
+    dummy_input = np.zeros((1, 224, 224, 3))
+    model.predict(dummy_input)
+    return model
 
 model = get_model()
 
@@ -46,19 +49,23 @@ def predict(image_bytes):
     full_class = label_map.get(short_class, short_class)
     confidence = float(np.max(probs) * 100)
 
-    # gradcam = generate_gradcam(image_array, predicted_class_idx)
+    gradcam = generate_gradcam(image_array, predicted_class_idx)
+
+    print(model.summary())
 
     return {
         "predicted_class": full_class,
         "class_code": short_class,
         "confidence": round(confidence, 2),
-        # "gradcam": gradcam
+        "gradcam": gradcam
     }
 
 
 def generate_gradcam(img_array, class_index):
     grad_model = tf.keras.models.Model(
-        [model.inputs], [model.get_layer(index=-1).output, model.output]
+        [model.inputs], 
+        # [model.get_layer("block5_conv3").output, model.output],
+        [model.get_layer(index=-1).output, model.output]
     )
 
     with tf.GradientTape() as tape:
@@ -66,18 +73,24 @@ def generate_gradcam(img_array, class_index):
         loss = predictions[:, class_index]
 
     grads = tape.gradient(loss, conv_outputs)[0]
-    conv_outputs = conv_outputs[0]
-    if len(grads.shape) == 3:  # (H, W, Channels)
-        weights = tf.reduce_mean(grads, axis=(0, 1))
-    elif len(grads.shape) == 1:  # fallback (just in case)
-        weights = grads
-    else:
-        raise ValueError(f"Unexpected grads shape: {grads.shape}")
-    cam = np.dot(conv_outputs, weights.numpy())
+
+    weights = tf.reduce_mean(grads, axis=(0, 1))
+
+    # conv_outputs = conv_outputs[0]
+    # if len(grads.shape) == 3:  # (H, W, Channels)
+    #     weights = tf.reduce_mean(grads, axis=(0, 1))
+    # elif len(grads.shape) == 1:  # fallback (just in case)
+    #     weights = grads
+    # else:
+    #     raise ValueError(f"Unexpected grads shape: {grads.shape}")
+    # cam = np.dot(conv_outputs, weights.numpy())
+
+    cam = np.sum(conv_outputs * weights.numpy(), axis=-1)
 
     cam = np.maximum(cam, 0)
-    cam = cam / cam.max()
+    cam = cam / (np.max(cam) + 1e-10)
     cam = cv2.resize(cam, (224, 224))
+
     heatmap = cv2.applyColorMap(np.uint8(255 * cam), cv2.COLORMAP_JET)
 
     img = np.uint8(img_array[0] * 255)
