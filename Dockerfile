@@ -50,7 +50,7 @@ HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8000/health || exit 1
 
 # Expose the app port
-EXPOSE 8000
+EXPOSE 8080
 
 # Default command
-CMD ["sh", "-c", "uvicorn webapp.backend.main:app --host 0.0.0.0 --port ${PORT:-8000} --timeout-keep-alive 120"]
+CMD ["sh", "-c", "uvicorn webapp.backend.main:app --host 0.0.0.0 --port ${PORT:-8080} --timeout-keep-alive 120"]
