@@ -61,96 +61,59 @@ def predict(image_bytes):
     }
 
 
-def generate_gradcam(image_tensor, model, layer_name="block5_conv3"):
-    grad_model = tf.keras.Model(
-        inputs=[model.input],
-        outputs=[model.get_layer(layer_name).output, model.output]
-    )
+def generate_gradcam(img_array, class_index):
+    """
+    Simplified GradCAM implementation with layer selection based on model's summary.
+    """
+    try:
+        # Get the third-to-last convolutional layer using model.get_layer
+        last_conv_layer = model.get_layer(index=-4)
 
-    with tf.GradientTape() as tape:
-        conv_outputs, predictions = grad_model(image_tensor)
-        class_idx = tf.argmax(predictions[0])
-        loss = predictions[:, class_idx]
+        # Create the gradient model
+        grad_model = tf.keras.models.Model(
+            [model.inputs], [last_conv_layer.output, model.output]
+        )
 
-    grads = tape.gradient(loss, conv_outputs)
-    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+        # Calculate gradients
+        with tf.GradientTape() as tape:
+            conv_outputs, predictions = grad_model(img_array)
+            loss = predictions[:, class_index]
 
-    conv_outputs = conv_outputs.numpy()[0]
-    pooled_grads = pooled_grads.numpy()
+        # Get gradients and weights
+        grads = tape.gradient(loss, conv_outputs)[0]
+        conv_outputs = conv_outputs[0]
 
-    for i in range(pooled_grads.shape[-1]):
-        conv_outputs[:, :, i] *= pooled_grads[i]
+        # Compute weights by averaging the gradients across spatial dimensions
+        if len(grads.shape) == 3:  # (H, W, Channels)
+            weights = tf.reduce_mean(grads, axis=(0, 1))
+        elif len(grads.shape) == 1:  # Fallback if the gradient is already 1D
+            weights = grads
+        else:
+            raise ValueError(f"Unexpected grads shape: {grads.shape}")
 
-    heatmap = np.mean(conv_outputs, axis=-1)
-    heatmap = np.maximum(heatmap, 0)
-    heatmap /= np.max(heatmap)
+        # Compute the Class Activation Map (CAM)
+        cam = np.dot(conv_outputs, weights.numpy())
 
-    # Resize heatmap using PIL
-    heatmap = Image.fromarray(np.uint8(255 * heatmap)).resize((255, 255), resample=Image.BILINEAR)
-    heatmap = np.array(heatmap)
+        # Normalize and resize the CAM
+        cam = np.maximum(cam, 0)  # ReLU
+        cam = cam / cam.max()  # Normalize
+        cam = cv2.resize(cam, (224, 224))
 
-    # Apply colormap using matplotlib
-    import matplotlib.cm as cm
-    import matplotlib.pyplot as plt
-    colormap = plt.colormaps['jet']
-    heatmap_colored = colormap(heatmap / 255.0)  # returns RGBA
-    heatmap_colored = np.uint8(255 * heatmap_colored[:, :, :3])  # Drop alpha
+        # Apply a colormap
+        heatmap = cv2.applyColorMap(np.uint8(255 * cam), cv2.COLORMAP_JET)
 
-    return heatmap_colored
+        # Convert the image to uint8 for visualization
+        img = np.uint8(img_array[0] * 255)
+        superimposed_img = cv2.addWeighted(img, 0.6, heatmap, 0.4, 0)
 
-# def generate_gradcam(img_array, class_index):
-#     """
-#     Simplified GradCAM implementation with layer selection based on model's summary.
-#     """
-#     try:
-#         # Get the third-to-last convolutional layer using model.get_layer
-#         last_conv_layer = model.get_layer(index=-4)
+        # Convert to a PIL image and encode to base64
+        pil_img = Image.fromarray(superimposed_img)
+        buf = io.BytesIO()
+        pil_img.save(buf, format='PNG')
+        encoded_img = base64.b64encode(buf.getvalue()).decode('utf-8')
 
-#         # Create the gradient model
-#         grad_model = tf.keras.models.Model(
-#             [model.inputs], [last_conv_layer.output, model.output]
-#         )
-
-#         # Calculate gradients
-#         with tf.GradientTape() as tape:
-#             conv_outputs, predictions = grad_model(img_array)
-#             loss = predictions[:, class_index]
-
-#         # Get gradients and weights
-#         grads = tape.gradient(loss, conv_outputs)[0]
-#         conv_outputs = conv_outputs[0]
-
-#         # Compute weights by averaging the gradients across spatial dimensions
-#         if len(grads.shape) == 3:  # (H, W, Channels)
-#             weights = tf.reduce_mean(grads, axis=(0, 1))
-#         elif len(grads.shape) == 1:  # Fallback if the gradient is already 1D
-#             weights = grads
-#         else:
-#             raise ValueError(f"Unexpected grads shape: {grads.shape}")
-
-#         # Compute the Class Activation Map (CAM)
-#         cam = np.dot(conv_outputs, weights.numpy())
-
-#         # Normalize and resize the CAM
-#         cam = np.maximum(cam, 0)  # ReLU
-#         cam = cam / cam.max()  # Normalize
-#         cam = cv2.resize(cam, (224, 224))
-
-#         # Apply a colormap
-#         heatmap = cv2.applyColorMap(np.uint8(255 * cam), cv2.COLORMAP_JET)
-
-#         # Convert the image to uint8 for visualization
-#         img = np.uint8(img_array[0] * 255)
-#         superimposed_img = cv2.addWeighted(img, 0.6, heatmap, 0.4, 0)
-
-#         # Convert to a PIL image and encode to base64
-#         pil_img = Image.fromarray(superimposed_img)
-#         buf = io.BytesIO()
-#         pil_img.save(buf, format='PNG')
-#         encoded_img = base64.b64encode(buf.getvalue()).decode('utf-8')
-
-#         return encoded_img
+        return encoded_img
     
-#     except Exception as e:
-#         print(f"Error during GradCAM generation: {e}")
-#         return None
+    except Exception as e:
+        print(f"Error during GradCAM generation: {e}")
+        return None

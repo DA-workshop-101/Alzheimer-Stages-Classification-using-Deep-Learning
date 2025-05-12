@@ -1,6 +1,6 @@
 # Core ML libraries
 # tensorflow==2.10.*
-tensorflow==2.15.*
+tensorflow==2.16.1
 keras
 keras_preprocessing
 pandas
@@ -11,6 +11,7 @@ PyYAML
 pillow
 # opencv-python
 opencv-python-headless
+matplotlib
 
 # FastAPI + server
 fastapi
