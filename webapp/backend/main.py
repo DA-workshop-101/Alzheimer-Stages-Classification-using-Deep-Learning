@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from fastapi.responses import JSONResponse # type: ignore
+from fastapi.responses import RedirectResponse
 from fastapi import FastAPI, File, UploadFile # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 from webapp.backend.predictor import predict
@@ -11,10 +12,6 @@ import uvicorn # type: ignore
 app = FastAPI()
 
 os.environ["RUN_MAIN"] = "true"
-
-# frontend_url = os.getenv("FRONTEND_URL", "http://127.0.0.1:3000") 
-
-# print("Frontend URL (for CORS):", frontend_url)
 
 origins = [
     "http://localhost:3000",
@@ -37,6 +34,9 @@ app.add_middleware(
     allow_headers=["*"]   # ["Content-Type", "Authorization"]
 )
 
+@app.get("/")
+def root():
+    return RedirectResponse(url="/docs")
 
 @app.get("/ping")
 async def ping():
