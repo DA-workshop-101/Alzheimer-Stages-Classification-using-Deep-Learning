@@ -91,6 +91,7 @@ def generate_gradcam(image_tensor, model, layer_name="block5_conv3"):
 
     # Apply colormap using matplotlib
     import matplotlib.cm as cm
+    import matplotlib.pyplot as plt
     colormap = plt.colormaps['jet']
     heatmap_colored = colormap(heatmap / 255.0)  # returns RGBA
     heatmap_colored = np.uint8(255 * heatmap_colored[:, :, :3])  # Drop alpha
