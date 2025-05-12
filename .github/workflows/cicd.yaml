@@ -5,7 +5,7 @@ on:
     branches: ["main"]
  
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest    #[self-hosted, linux]
     steps:
       - name: Checkout
@@ -44,4 +44,29 @@ jobs:
       - name: Trivy File Scan
         run: |
             trivy fs . > trivy_scan.txt
-            trivy image tanzeemrugrel/deep-learning:latest > trivy_image_scan.txt
+            trivy image lonewolf341/mri-dl-fastapi:latest > trivy_image_scan.txt
+
+  deploy:
+    name: Deploy to GCP
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to Cloud Run (update image only)
+        run: |
+          gcloud run deploy mri-dl-fastapi \
+            --image=docker.io/lonewolf341/mri-dl-fastapi:latest \
+            --region=us-central1 \
+            --platform=managed \
+            --quiet
