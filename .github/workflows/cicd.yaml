@@ -69,4 +69,5 @@ jobs:
             --image=docker.io/lonewolf341/mri-dl-fastapi:latest \
             --region=us-central1 \
             --platform=managed \
+            --service-account=cloudrun-deployer@adapt-458919.iam.gserviceaccount.com \
             --quiet
