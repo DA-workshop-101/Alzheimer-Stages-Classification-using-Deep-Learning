@@ -1,6 +1,7 @@
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
 import os
+import json
 import numpy as np
 import argparse
 from get_data import read_params
@@ -24,7 +25,7 @@ def model_evaluate(config_file: str, model_path: str = '../models/trained.h5'):
 
     test_gen = ImageDataGenerator(rescale = 1./255)
     test_set = test_gen.flow_from_directory(te_set,
-                                                target_size = (225,225),
+                                                target_size = (224, 224),
                                                 batch_size = batch,
                                                 class_mode = class_mode,
                                                 shuffle=False
@@ -72,3 +73,5 @@ if __name__ == '__main__':
     passed_args=parser.parse_args()
     result  = model_evaluate(config_file=passed_args.config)
     print(result)
+    with open("webapp/backend/model_metrics.json", "w") as f:
+        json.dump(result, f, indent=2) 

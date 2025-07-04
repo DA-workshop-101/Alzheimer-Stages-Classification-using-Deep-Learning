@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from fastapi.responses import JSONResponse # type: ignore
@@ -15,9 +16,7 @@ os.environ["RUN_MAIN"] = "true"
 
 origins = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost",
-    "http://127.0.0.1", 
+    "http://localhost:5173",
 
     # "https://your-firebase-app-name.web.app",  # Your Firebase Hosting URL
     # "https://your-custom-domain.com", # If you use a custom domain with Firebase
@@ -56,6 +55,18 @@ async def predict_endpoint(file: UploadFile = File(...)):
         print(f"Error during prediction: {e}")
         return JSONResponse(status_code=500, content={"error": str(e)})
 
+@app.get("/model-details")
+async def model_details():
+    try:
+        metrics_path = os.path.join(os.path.dirname(__file__), "model_metrics.json")
+        with open(metrics_path, 'r') as f:
+            metrics = json.load(f)
+        return JSONResponse(content=metrics)
+    except FileNotFoundError:
+        return JSONResponse(status_code=404, content={"error": "Model metrics not found"})
+    except Exception as e:
+        print(f"Error loading model metrics: {e}")
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 if __name__=="__main__" and os.getenv("RUN_MAIN") == "true" :
     uvicorn.run(app, host='0.0.0.0',port=8080)
