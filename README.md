@@ -22,10 +22,10 @@ A full-stack MLOps-enabled deep learning project to classify MRI brain scans int
 
 This project uses a transfer learning approach with VGG19 to classify MRI images into four Alzheimer’s disease stages:
 
-- Non-Demented  
-- Very Mild Demented  
-- Mild Demented  
-- Moderate Demented  
+- Alzheimer's Disease (AD)
+- Cognitively Normal (CN)
+- Early Mild Cognitive Impairment (EMCI)
+- Late Mild Cognitive Impairment (LMCI)
 
 Users upload an image through the frontend. The backend (FastAPI) returns:
 
